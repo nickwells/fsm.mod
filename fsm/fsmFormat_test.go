@@ -56,12 +56,8 @@ func TestFormat(t *testing.T) {
 	_ = f.ChangeState("finish")
 	for _, tc := range testCases {
 		out := fmt.Sprintf(tc.formatStr, f)
-		if out != tc.expOut {
-			t.Log(tc.IDStr())
-			t.Logf("\t: expected: %q", tc.expOut)
-			t.Logf("\t:      got: %q", out)
-			t.Errorf("\t: unexpected output from format string: %s\n",
-				tc.formatStr)
-		}
+		testhelper.CmpValString(t,
+			tc.IDStr()+": format string: "+tc.formatStr, "output",
+			out, tc.expOut)
 	}
 }
