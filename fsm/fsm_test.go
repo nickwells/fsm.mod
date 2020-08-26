@@ -46,21 +46,22 @@ func (u *underlying) Reset() {
 
 func TestStateTransAdd(t *testing.T) {
 	testCases := []struct {
-		testName      string
-		states        []fsm.STPair
-		errorExpected bool
+		testhelper.ID
+		states []fsm.STPair
+		testhelper.ExpErr
 	}{
 		{
-			testName:      "bad transition",
-			states:        []fsm.STPair{{From: "nonesuch", To: "any"}},
-			errorExpected: true,
+			ID:     testhelper.MkID("bad transition"),
+			states: []fsm.STPair{{From: "nonesuch", To: "any"}},
+			ExpErr: testhelper.MkExpErr(
+				"testStateTrans: state: 'nonesuch' does not exist", "failed"),
 		},
 		{
-			testName: "init transition",
-			states:   []fsm.STPair{{From: fsm.InitState, To: "state1"}},
+			ID:     testhelper.MkID("init transition"),
+			states: []fsm.STPair{{From: fsm.InitState, To: "state1"}},
 		},
 		{
-			testName: "multi transition",
+			ID: testhelper.MkID("multi transition"),
 			states: []fsm.STPair{
 				{From: fsm.InitState, To: "state1"},
 				{From: "state1", To: "state2"},
@@ -68,39 +69,28 @@ func TestStateTransAdd(t *testing.T) {
 		},
 	}
 
-	for i, tc := range testCases {
+	for _, tc := range testCases {
 		_, err := fsm.NewStateTrans("testStateTrans", tc.states...)
-		if err == nil && tc.errorExpected {
-			t.Logf("test %d: %s :\n", i, tc.testName)
-			t.Errorf("test %d: %s : an error was expected but not detected",
-				i, tc.testName)
-		} else if err != nil && !tc.errorExpected {
-			t.Logf("test %d: %s :\n", i, tc.testName)
-			t.Errorf("test %d: %s : an error was detected but not expected. Error: %s",
-				i, tc.testName, err)
-		}
+		testhelper.CheckExpErr(t, err, tc)
 	}
 }
 
 func TestStateTransSet(t *testing.T) {
 	testCases := []struct {
-		testName         string
-		states           []fsm.STPair
-		errorExpected    bool
-		stateExpected    string
-		stateNotExpected string
+		testhelper.ID
+		states []fsm.STPair
+		testhelper.ExpErr
+		statesExpected []string
 	}{
 		{
-			testName: "good - one tran",
+			ID: testhelper.MkID("good - one tran"),
 			states: []fsm.STPair{
 				{fsm.InitState, "A"},
 			},
-			errorExpected:    false,
-			stateExpected:    "A",
-			stateNotExpected: "X",
+			statesExpected: []string{fsm.InitState, "A"},
 		},
 		{
-			testName: "good - multi tran",
+			ID: testhelper.MkID("good - multi tran"),
 			states: []fsm.STPair{
 				{fsm.InitState, "A"},
 				{fsm.InitState, "B"},
@@ -108,12 +98,10 @@ func TestStateTransSet(t *testing.T) {
 				{fsm.InitState, "D"},
 				{"D", "E"},
 			},
-			errorExpected:    false,
-			stateExpected:    "C",
-			stateNotExpected: "X",
+			statesExpected: []string{fsm.InitState, "A", "B", "C", "D", "E"},
 		},
 		{
-			testName: "bad - multi tran",
+			ID: testhelper.MkID("bad - multi tran"),
 			states: []fsm.STPair{
 				{"X", "A"},
 				{fsm.InitState, "B"},
@@ -121,40 +109,27 @@ func TestStateTransSet(t *testing.T) {
 				{fsm.InitState, "D"},
 				{"D", "E"},
 			},
-			errorExpected:    true,
-			stateExpected:    fsm.InitState,
-			stateNotExpected: "X",
+			ExpErr: testhelper.MkExpErr(
+				"testStateTrans: state: 'X' does not exist", "failed"),
+			statesExpected: []string{fsm.InitState},
 		},
 	}
 
-	for i, tc := range testCases {
+	for _, tc := range testCases {
 		st, err := fsm.NewStateTrans("testStateTrans", tc.states...)
 
-		if err == nil {
-			if tc.errorExpected {
-				t.Logf("test %d: %s :\n", i, tc.testName)
-				t.Errorf("\t: an error was expected but was not detected")
-			}
+		if testhelper.CheckExpErr(t, err, tc) && err == nil {
+			testhelper.CmpValInt(t, tc.IDStr(), "number of states",
+				st.StateCount(), len(tc.statesExpected))
 
-			if !st.HasState(tc.stateExpected) {
-				t.Logf("test %d: %s :\n", i, tc.testName)
-				t.Errorf("\t: state: '%s' was expected but not detected",
-					tc.stateExpected)
-			}
-
-			if st.HasState(tc.stateNotExpected) {
-				t.Logf("test %d: %s :\n", i, tc.testName)
-				t.Errorf("\t: state: '%s' was detected but not expected",
-					tc.stateNotExpected)
-			}
-		} else {
-			if !tc.errorExpected {
-				t.Logf("test %d: %s :\n", i, tc.testName)
-				t.Errorf("\t: an unexpected error was detected: %s", err)
+			for _, state := range tc.statesExpected {
+				if !st.HasState(state) {
+					t.Logf(tc.IDStr())
+					t.Errorf("\t: state: %q was expected but not found", state)
+				}
 			}
 		}
 	}
-
 }
 
 func TestFSM_BadST(t *testing.T) {
