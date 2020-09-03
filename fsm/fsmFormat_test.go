@@ -56,7 +56,7 @@ func TestFormat(t *testing.T) {
 	_ = f.ChangeState("finish")
 	for _, tc := range testCases {
 		out := fmt.Sprintf(tc.formatStr, f)
-		testhelper.CmpValString(t,
+		testhelper.DiffString(t,
 			tc.IDStr()+": format string: "+tc.formatStr, "output",
 			out, tc.expOut)
 	}

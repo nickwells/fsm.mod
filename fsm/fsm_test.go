@@ -119,7 +119,7 @@ func TestStateTransSet(t *testing.T) {
 		st, err := fsm.NewStateTrans("testStateTrans", tc.states...)
 
 		if testhelper.CheckExpErr(t, err, tc) && err == nil {
-			testhelper.CmpValInt(t, tc.IDStr(), "number of states",
+			testhelper.DiffInt(t, tc.IDStr(), "number of states",
 				st.StateCount(), len(tc.statesExpected))
 
 			for _, state := range tc.statesExpected {
