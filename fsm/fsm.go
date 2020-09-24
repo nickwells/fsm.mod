@@ -139,31 +139,46 @@ func (f *FSM) ChangeState(newState string) error {
 // any state descriptions.
 func (f FSM) Format(fstate fmt.State, c rune) {
 	str := ""
-	var suffix string
 
 	switch c {
 	case 'v':
-		if fstate.Flag('#') {
-			str += "FSMType: " + f.Name() + ": "
-		}
-		str += "State: " + f.current.name
-		if fstate.Flag('#') {
-			str += ": PriorState: " + f.prior.name
-		}
-	default:
-		str += "%!" + string(c) + "(FSM="
-		suffix = ")"
-		fallthrough
+		str = f.vFormat(fstate)
 	case 's':
-		if fstate.Flag('#') {
-			str += f.Name() + ": " +
-				f.current.String() +
-				" (was: " + f.prior.String() + ")"
-		} else {
-			str += f.current.name
-		}
-		str += suffix
+		str = f.sFormat(fstate)
+	default:
+		str += "%!" + string(c) +
+			"(FSM=" +
+			f.sFormat(fstate) +
+			")"
 	}
 
 	_, _ = fstate.Write([]byte(str))
+}
+
+// sFormat returns a string representing the FSM formatted according to the
+// 's' verb
+func (f FSM) sFormat(fstate fmt.State) string {
+	s := ""
+	if fstate.Flag('#') {
+		s += f.Name() + ": " +
+			f.current.String() +
+			" (was: " + f.prior.String() + ")"
+	} else {
+		s += f.current.name
+	}
+	return s
+}
+
+// vFormat returns a string representing the FSM formatted according to the
+// 'v' verb
+func (f FSM) vFormat(fstate fmt.State) string {
+	s := ""
+	if fstate.Flag('#') {
+		s += "FSMType: " + f.Name() + ": "
+	}
+	s += "State: " + f.current.name
+	if fstate.Flag('#') {
+		s += ": PriorState: " + f.prior.name
+	}
+	return s
 }
