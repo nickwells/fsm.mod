@@ -150,12 +150,12 @@ func (st *StateTrans) SetDescriptions(descriptions ...StateDesc) error {
 //
 // This might be useful for generating documentation for your package.
 func (st StateTrans) PrintDot(w io.Writer) {
-	var safeNames = make(map[string]string)
+	safeNames := make(map[string]string)
 	for stateName := range st.states {
 		safeNames[stateName] = strings.Replace(stateName, "\"", "\\\"", -1)
 	}
 
-	var namesInOrder = make([]string, 0, len(st.states))
+	namesInOrder := make([]string, 0, len(st.states))
 	for name := range st.states {
 		namesInOrder = append(namesInOrder, name)
 	}
@@ -195,7 +195,7 @@ func (st StateTrans) PrintDot(w io.Writer) {
 
 	for _, name := range namesInOrder {
 		s := st.states[name]
-		var nextNamesInOrder = make([]string, 0, len(s.nextState))
+		nextNamesInOrder := make([]string, 0, len(s.nextState))
 		for _, ns := range s.nextState {
 			nextNamesInOrder = append(nextNamesInOrder, ns.name)
 		}

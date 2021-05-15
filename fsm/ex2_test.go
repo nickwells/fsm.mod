@@ -24,7 +24,6 @@ import (
 
 // Example_ex2 is an example of how the StateTrans struct can be used
 func Example_ex2() {
-
 	// now construct the set of allowed state transitions
 	st, err := fsm.NewStateTrans("my \"best\" ST graph", []fsm.STPair{
 		{fsm.InitState, ReadyToReview},

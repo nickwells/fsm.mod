@@ -87,7 +87,6 @@ func notifyReleaseTeam(b *BugReport) {
 // Example_ex1 is an example of how the fsm can be used to manage the
 // lifecycle of some business object; in this case, a bug.
 func Example_ex1() {
-
 	// now construct the set of allowed state transitions
 	st, err := fsm.NewStateTrans("BugReport", []fsm.STPair{
 		{fsm.InitState, ReadyToReview},
