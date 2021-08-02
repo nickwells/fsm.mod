@@ -152,7 +152,7 @@ func (st *StateTrans) SetDescriptions(descriptions ...StateDesc) error {
 func (st StateTrans) PrintDot(w io.Writer) {
 	safeNames := make(map[string]string)
 	for stateName := range st.states {
-		safeNames[stateName] = strings.Replace(stateName, "\"", "\\\"", -1)
+		safeNames[stateName] = strings.ReplaceAll(stateName, "\"", "\\\"")
 	}
 
 	namesInOrder := make([]string, 0, len(st.states))
@@ -211,7 +211,7 @@ func (st StateTrans) PrintDot(w io.Writer) {
 	fmt.Fprintln(w, "    fontsize=22")
 
 	fmt.Fprintf(w, "    label = \"\n%s\n\"\n",
-		strings.Replace(st.name, "\"", "\\\"", -1))
+		strings.ReplaceAll(st.name, "\"", "\\\""))
 
 	fmt.Fprintln(w, "}")
 }
