@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/nickwells/fsm.mod/fsm"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestFormat(t *testing.T) {
