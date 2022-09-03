@@ -146,7 +146,7 @@ func (st *StateTrans) SetDescriptions(descriptions ...StateDesc) error {
 // following command to generate the png image and write it to a file called
 // graph.png
 //
-//    dot -Tpng -ograph.png stateTrans.gv
+//	dot -Tpng -ograph.png stateTrans.gv
 //
 // This might be useful for generating documentation for your package.
 func (st StateTrans) PrintDot(w io.Writer) {

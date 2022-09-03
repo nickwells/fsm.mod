@@ -131,8 +131,8 @@ func (f *FSM) ChangeState(newState string) error {
 // Format is used by the fmt package in the standard library to format the
 // FSM. It supports two formats:
 //
-//     %s which prints the current state
-//     %v which prints the current state with a label "State: "
+//	%s which prints the current state
+//	%v which prints the current state with a label "State: "
 //
 // Either of these can be given the '#' flag which causes them to also print
 // the FSM name and the previous state. Additionally the %s format will print
