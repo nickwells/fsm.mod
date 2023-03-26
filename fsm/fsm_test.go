@@ -18,7 +18,7 @@ type underlying struct {
 const undErrStr = "the underlying forbids the change"
 
 // (u underlying)TransitionAllowed ...
-func (u *underlying) TransitionAllowed(f *fsm.FSM, toState string) error {
+func (u *underlying) TransitionAllowed(_ *fsm.FSM, _ string) error {
 	u.transitionAllowedCalled = true
 	if u.allowChange {
 		return nil
@@ -27,12 +27,12 @@ func (u *underlying) TransitionAllowed(f *fsm.FSM, toState string) error {
 }
 
 // (u underlying)OnTransition ...
-func (u *underlying) OnTransition(f *fsm.FSM) {
+func (u *underlying) OnTransition(_ *fsm.FSM) {
 	u.onTransitionCalled = true
 }
 
 // (u underlying)SetFSM ...
-func (u *underlying) SetFSM(f *fsm.FSM) {
+func (u *underlying) SetFSM(_ *fsm.FSM) {
 	u.setFSMCallCount++
 }
 
