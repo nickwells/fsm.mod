@@ -39,6 +39,7 @@ func checkTestEvidence(b *BugReport, _ *fsm.FSM) error {
 	if b.testEvidence == "" {
 		return fmt.Errorf("missing test evidence")
 	}
+
 	return nil
 }
 
@@ -53,11 +54,13 @@ func (b *BugReport) TransitionAllowed(f *fsm.FSM, newState string) error {
 			return err
 		}
 	}
+
 	if newState == TestPassed {
 		if b.testEvidence == "" {
 			return fmt.Errorf("missing test evidence")
 		}
 	}
+
 	return nil
 }
 
@@ -108,6 +111,7 @@ func Example_ex1() {
 		fmt.Println("There was a problem initialising the transitions:", err)
 		return
 	}
+
 	_ = st.SetStateDesc(ReadyToReview,
 		"The bug is ready to review")
 	_ = st.SetStateDesc(UnderReview,
@@ -143,14 +147,18 @@ func Example_ex1() {
 	}
 
 	fmt.Println("Current state:", b.CurrentState())
+
 	for _, newState := range sampleStateChanges {
 		fmt.Println("Changing to:  ", newState)
+
 		err := b.ChangeState(newState)
 		if err != nil {
 			fmt.Println("ERROR:         Cannot change from",
 				b.CurrentState(), "to", newState, ": ", err)
 		}
+
 		fmt.Println("Current state:", b.CurrentState())
+
 		if b.IsInTerminalState() {
 			fmt.Println("done")
 			break

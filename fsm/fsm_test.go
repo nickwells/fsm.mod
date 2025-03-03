@@ -23,6 +23,7 @@ func (u *underlying) TransitionAllowed(_ *fsm.FSM, _ string) error {
 	if u.allowChange {
 		return nil
 	}
+
 	return errors.New(undErrStr)
 }
 
@@ -54,7 +55,7 @@ func TestStateTransAdd(t *testing.T) {
 			ID:     testhelper.MkID("bad transition"),
 			states: []fsm.STPair{{From: "nonesuch", To: "any"}},
 			ExpErr: testhelper.MkExpErr(
-				"testStateTrans: state: 'nonesuch' does not exist", "failed"),
+				"testStateTrans: state: \"nonesuch\" does not exist", "failed"),
 		},
 		{
 			ID:     testhelper.MkID("init transition"),
@@ -110,7 +111,7 @@ func TestStateTransSet(t *testing.T) {
 				{"D", "E"},
 			},
 			ExpErr: testhelper.MkExpErr(
-				"testStateTrans: state: 'X' does not exist", "failed"),
+				"testStateTrans: state: \"X\" does not exist", "failed"),
 			statesExpected: []string{fsm.InitState},
 		},
 	}
@@ -124,7 +125,7 @@ func TestStateTransSet(t *testing.T) {
 
 			for _, state := range tc.statesExpected {
 				if !st.HasState(state) {
-					t.Logf(tc.IDStr())
+					t.Log(tc.IDStr())
 					t.Errorf("\t: state: %q was expected but not found", state)
 				}
 			}
@@ -223,6 +224,7 @@ func TestFsm(t *testing.T) {
 
 	var u underlying
 	f := fsm.New(st, &u)
+
 	if u.setFSMCallCount != 1 {
 		t.Errorf("Unexpected SetFSMCallCount: expected 1, got %d\n",
 			u.setFSMCallCount)
@@ -248,8 +250,9 @@ func TestFsm(t *testing.T) {
 		u.allowChange = tc.uState
 		err = f.ChangeState(tc.newState)
 		testhelper.CheckExpErr(t, err, tc)
+
 		if u != tc.expectedUnderlying {
-			t.Logf(tc.IDStr())
+			t.Log(tc.IDStr())
 			t.Errorf("\t: Unexpected underlying value. Expected: %v, got: %v",
 				tc.expectedUnderlying, u)
 		}

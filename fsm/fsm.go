@@ -58,6 +58,7 @@ func New(st *StateTrans, u Underlying) *FSM {
 	if u != nil {
 		u.SetFSM(f)
 	}
+
 	return f
 }
 
@@ -93,7 +94,9 @@ func (f *FSM) NextStates() []string {
 	for _, s := range f.current.nextState {
 		states = append(states, s.name)
 	}
+
 	sort.StringSlice(states).Sort()
+
 	return states
 }
 
@@ -110,6 +113,7 @@ func (f *FSM) ChangeState(newState string) error {
 		if !f.st.HasState(newState) {
 			return f.mkErrUnknownState(newState)
 		}
+
 		return f.mkErrNoTransition(newState)
 	}
 
@@ -125,6 +129,7 @@ func (f *FSM) ChangeState(newState string) error {
 	if f.und != nil {
 		f.und.OnTransition(f)
 	}
+
 	return nil
 }
 
@@ -166,6 +171,7 @@ func (f FSM) sFormat(fstate fmt.State) string {
 	} else {
 		s += f.current.name
 	}
+
 	return s
 }
 
@@ -176,9 +182,12 @@ func (f FSM) vFormat(fstate fmt.State) string {
 	if fstate.Flag('#') {
 		s += "FSMType: " + f.Name() + ": "
 	}
+
 	s += "State: " + f.current.name
+
 	if fstate.Flag('#') {
 		s += ": PriorState: " + f.prior.name
 	}
+
 	return s
 }

@@ -28,5 +28,6 @@ func (s state) String() string {
 	if s.desc != "" {
 		str += " [" + s.desc + "]"
 	}
+
 	return str
 }

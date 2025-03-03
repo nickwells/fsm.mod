@@ -76,7 +76,7 @@ func (st *StateTrans) add(from, to string) error {
 	fromState, ok := st.states[from]
 	if !ok {
 		return fmt.Errorf(
-			"%s: state: '%s' does not exist. Add('%s', '%s') failed",
+			"%s: state: %q does not exist. Add(%q, %q) failed",
 			st.name, from, from, to)
 	}
 
@@ -85,6 +85,7 @@ func (st *StateTrans) add(from, to string) error {
 		toState = newState(to)
 		st.states[to] = toState
 	}
+
 	fromState.nextState[toState.name] = toState
 
 	return nil
@@ -100,6 +101,7 @@ func (st *StateTrans) set(transitions ...STPair) error {
 			return err
 		}
 	}
+
 	return nil
 }
 
@@ -122,6 +124,7 @@ func (st *StateTrans) SetStateDesc(name, desc string) error {
 	}
 
 	s.desc = desc
+
 	return nil
 }
 
@@ -136,6 +139,7 @@ func (st *StateTrans) SetDescriptions(descriptions ...StateDesc) error {
 			return err
 		}
 	}
+
 	return nil
 }
 
@@ -159,6 +163,7 @@ func (st StateTrans) PrintDot(w io.Writer) {
 	for name := range st.states {
 		namesInOrder = append(namesInOrder, name)
 	}
+
 	sort.Strings(namesInOrder)
 
 	fmt.Fprintln(w, "// A state transition graph for")
@@ -171,8 +176,10 @@ func (st StateTrans) PrintDot(w io.Writer) {
 	fmt.Fprintln(w, ";")
 	fmt.Fprintln(w, "    node [shape = doublecircle")
 	fmt.Fprintln(w, "          style=filled fillcolor=grey85];")
-	sep := ""
 	fmt.Fprint(w, "        ")
+
+	sep := ""
+
 	for _, name := range namesInOrder {
 		s := st.states[name]
 		if s.isTerminal() {
@@ -180,25 +187,29 @@ func (st StateTrans) PrintDot(w io.Writer) {
 			sep = ", "
 		}
 	}
+
 	fmt.Fprintln(w, ";")
 	fmt.Fprintln(w, "    node [shape = circle style=solid];")
-
 	fmt.Fprintln(w, "    { rank = same;")
 	fmt.Fprint(w, "        ")
+
 	for _, name := range namesInOrder {
 		s := st.states[name]
 		if s.isTerminal() {
 			fmt.Fprintf(w, "\"%s\" ", safeNames[name])
 		}
 	}
+
 	fmt.Fprintln(w, "}")
 
 	for _, name := range namesInOrder {
 		s := st.states[name]
 		nextNamesInOrder := make([]string, 0, len(s.nextState))
+
 		for _, ns := range s.nextState {
 			nextNamesInOrder = append(nextNamesInOrder, ns.name)
 		}
+
 		sort.Strings(nextNamesInOrder)
 
 		for _, nextName := range nextNamesInOrder {
@@ -209,9 +220,7 @@ func (st StateTrans) PrintDot(w io.Writer) {
 	}
 
 	fmt.Fprintln(w, "    fontsize=22")
-
 	fmt.Fprintf(w, "    label = \"\n%s\n\"\n",
 		strings.ReplaceAll(st.name, "\"", "\\\""))
-
 	fmt.Fprintln(w, "}")
 }
