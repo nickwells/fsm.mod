@@ -1,6 +1,6 @@
 module github.com/nickwells/fsm.mod
 
-go 1.18
+go 1.24
 
 require github.com/nickwells/testhelper.mod/v2 v2.3.0
 
