@@ -2,7 +2,7 @@ package fsm
 
 import (
 	"fmt"
-	"sort"
+	"slices"
 )
 
 // Underlying is an interface representing a set of functions to be called
@@ -95,7 +95,7 @@ func (f *FSM) NextStates() []string {
 		states = append(states, s.name)
 	}
 
-	sort.StringSlice(states).Sort()
+	slices.Sort(states)
 
 	return states
 }

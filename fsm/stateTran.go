@@ -3,6 +3,8 @@ package fsm
 import (
 	"fmt"
 	"io"
+	"maps"
+	"slices"
 	"sort"
 	"strings"
 )
@@ -159,12 +161,7 @@ func (st StateTrans) PrintDot(w io.Writer) {
 		safeNames[stateName] = strings.ReplaceAll(stateName, "\"", "\\\"")
 	}
 
-	namesInOrder := make([]string, 0, len(st.states))
-	for name := range st.states {
-		namesInOrder = append(namesInOrder, name)
-	}
-
-	sort.Strings(namesInOrder)
+	namesInOrder := slices.Sorted(maps.Keys(st.states))
 
 	fmt.Fprintln(w, "// A state transition graph for")
 	fmt.Fprintln(w, "//      ", st.name)
