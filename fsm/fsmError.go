@@ -31,6 +31,8 @@ func (fe UnknownState) Error() string {
 		fe.FSMName, fe.State)
 }
 
+// FSMError is a no-op function used to distinguish between an fsm package
+// error and other error types.
 func (UnknownState) FSMError() {}
 
 // NoTransition is an error type that represents a non-existent
@@ -57,6 +59,8 @@ func (fe NoTransition) Error() string {
 		fe.FSMName, fe.FromState, fe.ToState)
 }
 
+// FSMError is a no-op function used to distinguish between an fsm package
+// error and other error types.
 func (NoTransition) FSMError() {}
 
 // ForbiddenChange is an error type that represents a forbidden transition
@@ -91,4 +95,6 @@ func (fe ForbiddenChange) Error() string {
 		fe.FSMName, fe.FromState, fe.ToState, fe.UndError)
 }
 
+// FSMError is a no-op function used to distinguish between an fsm package
+// error and other error types.
 func (ForbiddenChange) FSMError() {}

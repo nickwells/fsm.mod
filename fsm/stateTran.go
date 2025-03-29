@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// InitState is the initial state of a finite state machine
 const InitState = "init"
 
 // StateTrans records the valid state changes.
