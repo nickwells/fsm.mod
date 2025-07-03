@@ -118,7 +118,6 @@ func TestStateTransSet(t *testing.T) {
 
 	for _, tc := range testCases {
 		st, err := fsm.NewStateTrans("testStateTrans", tc.states...)
-
 		if testhelper.CheckExpErr(t, err, tc) && err == nil {
 			testhelper.DiffInt(t, tc.IDStr(), "number of states",
 				st.StateCount(), len(tc.statesExpected))
@@ -222,7 +221,7 @@ func TestFsm(t *testing.T) {
 		t.Errorf("Unexpected StateCount: expected 4, got %d\n", stateCount)
 	}
 
-	var u underlying
+	u := underlying{}
 	f := fsm.New(st, &u)
 
 	if u.setFSMCallCount != 1 {
